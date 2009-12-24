@@ -1,0 +1,118 @@
+<table style="min-width: 50%">
+  <thead>
+    <tr>
+      <td colspan="2">
+	<tal:block content="structure view/principals/@@pagelet/batch.view" />
+      </td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style="vertical-align: top">
+      <td style="padding-right: 2em;">
+	<div class="z-table-container">
+	  <table class="z-table">
+	    <tbody>
+	      <tr tal:repeat="principal view/principals">
+		<td>
+		  <input type="checkbox" id="" name="" class=""
+			 title="" lang="" disabled=""
+			 readonly="" alt="" tabindex="" accesskey=""
+			 tal:attributes="name python:'%s:list'%view.name;
+					 class view/klass;
+					 style view/style;
+					 title view/title;
+					 lang view/lang;
+					 value principal/id;
+					 disabled view/disabled;
+					 tabindex view/tabindex;
+					 readonly view/readonly;
+					 accesskey view/accesskey" />
+		</td>
+		<tal:block
+		   tal:define="info python:view.getPrincipalInfo(principal)">
+		  <td tal:content="info/title"></td>
+		  <td class="discreet">
+		    <tal:block condition="info/user">User</tal:block>
+		    <tal:block condition="not:info/user">Group</tal:block>
+		  </td>
+		</tal:block>
+	      </tr>
+	    </tbody>
+	  </table>
+	</div>
+	<tal:block condition="not:view/principals">
+	  <tal:block condition="view/searching">
+	    <p i18n:translate="">No results were found.</p>
+	  </tal:block>
+	  <tal:block condition="not:view/searching">
+	    <p i18n:translate="">There are no available principals.</p>
+	  </tal:block>
+	</tal:block>
+	
+	<tal:block condition="python:not (not view.searching and not view.principals)">
+	  <input type="text" 
+		 tal:attributes="name string:${view/name}.searchText;
+				 value view/searchtext" />
+	  <input type="submit" value="Search" i18n:attributes="value"
+		 class="z-form-button"
+		 tal:attributes="name string:${view/name}.searchButton" />
+	  <input type="submit" value="Clear search" i18n:attributes="value"
+		 class="z-form-removebutton" tal:condition="view/searching"
+		 tal:attributes="name string:${view/name}.searchClear" />
+	</tal:block>
+	<input type="submit" value="Select" i18n:attributes="value"
+	       class="z-form-standalonebtn" tal:condition="view/principals"
+	       tal:attributes="name string:${view/name}.selectPrincipal" />
+      </td>
+      <td tal:define="principals view/getSelected"
+	  tal:condition="principals">
+	<table class="z-table">
+	  <thead>
+	    <tr class="z-table-pages" tal:condition="view/changed">
+	      <td colspan="2">
+		<div>
+		  Principals list have been changed. Do not forget to save data!
+		</div>
+		<br />
+	      </td>
+	    </tr>
+	    <tr>
+	      <td colspan="2" class="strong">
+		Selected
+	      </td>
+	    </tr>
+	  </thead>
+	  <tbody>
+	    <tr tal:repeat="principal principals">
+	      <td>
+		<input type="checkbox"
+		       tal:attributes="name python:'%s.selected:list'%view.name;
+				       value principal/id;
+				       tabindex view/tabindex;
+				       accesskey view/accesskey" />
+	      </td>
+	      <td tal:content="principal/title"></td>
+	    </tr>
+	  </tbody>
+	  <tfoot>
+	    <tr>
+	      <td></td>
+	      <td>
+		<div class="z-form-controls">
+		  <input type="submit" value="Clear" i18n:attributes="value"
+			 class="z-form-button"
+			 tal:attributes="name string:${view/name}.clearSelected" />
+		  <input type="submit" value="Remove" i18n:attributes="value"
+			 class="z-form-removebutton"
+			 tal:attributes="name string:${view/name}.removeSelected" />
+		</div>
+	      </td>
+	    </tr>
+	  </tfoot>
+	</table>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<input type="hidden" value="1"
+       tal:attributes="name string:${view/name}-empty-marker" />

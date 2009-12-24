@@ -1,0 +1,64 @@
+<div tal:define="principal view/getSelected" tal:condition="principal">
+  Selected: <b><tal:block content="principal/title" /></b>
+  <input type="hidden" 
+	 tal:attributes="name view/selectedName; value principal/id" />
+</div>
+
+<div class="z-table-container" tal:condition="view/principals">
+  <table class="z-table" style="min-width: 50%">
+    <tr class="z-table-pages">
+      <td colspan="3">
+	<tal:block content="structure view/principals/@@pagelet/batch.view" />
+      </td>
+    </tr>
+    <tbody>
+      <tr tal:repeat="principal view/principals">
+	<td>
+	  <input type="radio" id="" name="" class="" title="" lang=""
+		 disabled="" readonly="" alt="" tabindex="" accesskey=""
+		 tal:attributes="name view/name;
+				 class view/klass;
+				 style view/style;
+				 title view/title;
+				 lang view/lang;
+				 checked python:view.value == principal.id;
+				 value principal/id;
+				 disabled view/disabled;
+				 tabindex view/tabindex;
+				 readonly view/readonly;
+				 accesskey view/accesskey" />
+	</td>
+	<tal:block tal:define="info python:view.getPrincipalInfo(principal)">
+	<td tal:content="info/title"></td>
+	<td>
+	  <span class="discreet">
+	    <tal:block condition="info/user">User</tal:block>
+	    <tal:block condition="not:info/user">Group</tal:block>
+	  </span>
+	</td>
+	</tal:block>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<tal:block condition="not:view/principals">
+  <tal:block condition="view/searching">
+    <p i18n:translate="">No results were found.</p>
+  </tal:block>
+  <tal:block condition="not:view/searching">
+    <p i18n:translate="">There are no available principals.</p>
+  </tal:block>
+</tal:block>
+
+<tal:block condition="python:not (not view.searching and not view.principals)">
+  <input type="text" 
+	 tal:attributes="name string:${view/name}.searchText;
+			 value view/searchtext" />
+  <input type="submit" value="Search" i18n:attributes="value"
+	 class="z-form-button"
+	 tal:attributes="name string:${view/name}.searchButton" />
+  <input type="submit" value="Clear" i18n:attributes="value"
+	 class="z-form-removebutton" tal:condition="view/searching"
+	 tal:attributes="name string:${view/name}.searchClear" />
+</tal:block>
