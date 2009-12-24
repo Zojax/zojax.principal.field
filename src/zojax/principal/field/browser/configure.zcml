@@ -1,0 +1,63 @@
+<configure
+   xmlns="http://namespaces.zope.org/zope"
+   xmlns:zojax="http://namespaces.zope.org/zojax"
+   xmlns:z3c="http://namespaces.zope.org/z3c"
+   i18n_domain="zojax.principal.field">
+
+  <zojax:pageletType
+     name="principal.info"
+     interface=".interfaces.IPrincipalInfo" />
+
+  <class class=".widget.PrincipalWidget">
+    <require
+       permission="zope.Public"
+       interface="z3c.form.interfaces.IWidget" />
+  </class>
+
+  <adapter factory=".widget.PrincipalFieldWidget" />
+
+  <class class=".widget.PrincipalsWidget">
+    <require
+       permission="zope.Public"
+       interface="z3c.form.interfaces.IWidget" />
+  </class>
+
+  <adapter factory=".widget.PrincipalsFieldWidget" />
+
+  <adapter
+     for="zope.schema.interfaces.ITuple
+	  zojax.principal.field.interfaces.IPrincipalField *"
+     factory=".widget.PrincipalsFieldWidget" />
+
+  <adapter
+     for="zope.schema.interfaces.IList
+	  zojax.principal.field.interfaces.IPrincipalField *"
+     factory=".widget.PrincipalsFieldWidget" />
+
+  <adapter factory=".widget.PrincipalsWidgetConverter" />
+
+  <z3c:widgetTemplate
+     mode="display"
+     widget="zojax.principal.field.interfaces.IPrincipalWidget"
+     layer="z3c.form.interfaces.IFormLayer"
+     template="widget_display.pt" />
+
+  <z3c:widgetTemplate
+     mode="input"
+     widget="zojax.principal.field.interfaces.IPrincipalWidget"
+     layer="z3c.form.interfaces.IFormLayer"
+     template="widget_input.pt" />
+
+  <z3c:widgetTemplate
+     mode="input"
+     widget="zojax.principal.field.interfaces.IPrincipalsWidget"
+     layer="z3c.form.interfaces.IFormLayer"
+     template="principals_input.pt" />
+
+  <z3c:widgetTemplate
+     mode="hidden"
+     widget="zojax.principal.field.interfaces.IPrincipalWidget"
+     layer="z3c.form.interfaces.IFormLayer"
+     template="widget_hidden.pt" />
+
+</configure>

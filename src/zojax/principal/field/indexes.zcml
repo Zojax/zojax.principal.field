@@ -1,0 +1,18 @@
+<configure xmlns="http://namespaces.zope.org/zope">
+
+  <utility
+     name="principalId"
+     component=".indexes.principalId"
+     provides="zojax.catalog.interfaces.ICatalogIndexFactory" />
+
+  <utility
+     name="principalType"
+     component=".indexes.principalType"
+     provides="zojax.catalog.interfaces.ICatalogIndexFactory" />
+
+  <utility
+     name="principalTitle"
+     component=".indexes.principalTitle"
+     provides="zojax.catalog.interfaces.ICatalogIndexFactory" />
+
+</configure>

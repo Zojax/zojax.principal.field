@@ -1,0 +1,128 @@
+===============
+Principal Field
+===============
+
+  >>> from zope.testbrowser.testing import Browser
+
+  >>> actor = Browser()
+  >>> actor.handleErrors = False
+  >>> actor.addHeader("Authorization", "Basic mgr:mgrpw")
+  >>> actor.open("http://localhost/settings/")
+
+No users
+
+  >>> actor.getLink('Principals management').click()
+  >>> print actor.contents
+  <html>
+  ...
+  <div class="z-form-field">
+     <label for="form-widgets-principal"
+            title="Select principal to view/edit.">Principal</label>
+     <span class="z-form-fieldRequired">&nbsp;</span>
+     <div class="z-form-help">Select principal to view/edit.</div>
+     <div>
+       <p>There are no available principals.</p>
+     </div>
+  </div>
+  ...
+  </html>
+
+
+Create users
+
+  >>> actor.open("http://localhost/settings/")
+  >>> actor.getLink('Authentication').click()
+  >>> actor.getControl('Install').click()
+  >>> actor.getControl(name="factory_ids:list").value = ['principal.users']
+  >>> actor.getControl('Install').click()
+
+  >>> actor.getLink('Principals management').click()
+  >>> actor.getLink('Member').click()
+  >>> actor.getControl('First Name').value = 'User'
+  >>> actor.getControl('Last Name').value = '1'
+  >>> actor.getControl('E-mail/Login').value = 'user1@zojax.net'
+  >>> actor.getControl('Password').value = '12345'
+  >>> actor.getControl('Add').click()
+
+  >>> actor.getLink('Back to principals management panel').click()
+  >>> actor.getLink('Member').click()
+  >>> actor.getControl('First Name').value = 'User'
+  >>> actor.getControl('Last Name').value = '2'
+  >>> actor.getControl('E-mail/Login').value = 'user2@zojax.net'
+  >>> actor.getControl('Password').value = '12345'
+  >>> actor.getControl('Add').click()
+
+  >>> actor.getLink('Back to principals management panel').click()
+  >>> print actor.contents
+  <html>
+  ...
+  <div class="z-table-container">
+    <table class="z-table" style="min-width: 50%">
+       <tr class="z-table-pages">
+         <td colspan="3">      
+         </td>
+       </tr>
+       <tbody>
+       <tr>
+        <td>
+          <input type="radio" id="" name="form.widgets.principal"
+              class="required" alt="" value="zojax.pf01" />
+        </td>
+        <td>User 1</td>
+        <td>
+          <span class="discreet">
+            User
+          </span>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <input type="radio" id="" name="form.widgets.principal"
+              class="required" alt="" value="zojax.pf03" />
+        </td>    
+        <td>User 2</td>
+        <td>
+          <span class="discreet">
+            User
+          </span>
+        </td>
+      </tr>
+     </tbody>
+    </table>
+  </div>
+  ...
+  </html>
+
+
+  >>> from zope.app.component.hooks import setSite
+  >>> from zojax.principal.field import UserField, GroupField
+  >>> setSite(getRootFolder())
+
+  >>> field = UserField()
+  >>> field.fromUnicode('zojax.pf01')
+  u'zojax.pf01'
+
+  >>> field.validate('zojax.pf01')
+  >>> field.validate('unknown')
+  Traceback (most recent call last):
+  ...
+  InvalidPrincipal: unknown
+
+  >>> field.validate('zope.Everybody')
+  Traceback (most recent call last):
+  ...
+  InvalidPrincipal: zope.Everybody
+  
+
+  >>> field = GroupField()
+  >>> field.validate('zope.Everybody')
+
+  >>> field.validate('zojax.pf01')
+  Traceback (most recent call last):
+  ...
+  InvalidPrincipal: zojax.pf01
+
+  >>> field.validate('unknown')
+  Traceback (most recent call last):
+  ...
+  InvalidPrincipal: unknown
