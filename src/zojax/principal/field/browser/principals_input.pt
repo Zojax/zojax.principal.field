@@ -70,14 +70,14 @@
 	  <thead>
 	    <tr class="z-table-pages" tal:condition="view/changed">
 	      <td colspan="2">
-		<div>
+		<div i18n:translate="">
 		  Principals list have been changed. Do not forget to save data!
 		</div>
 		<br />
 	      </td>
 	    </tr>
 	    <tr>
-	      <td colspan="2" class="strong">
+	      <td colspan="2" class="strong" i18n:translate="">
 		Selected
 	      </td>
 	    </tr>
